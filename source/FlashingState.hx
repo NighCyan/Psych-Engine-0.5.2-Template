@@ -35,7 +35,7 @@ class FlashingState extends MusicBeatState
 		add(warnText);
 
                 #if android
-	        addVirtualPad(NONE, A_B);
+	        addVirtualPad(NONE, A);
                 #end
 	}
 
@@ -48,7 +48,7 @@ class FlashingState extends MusicBeatState
 				FlxTransitionableState.skipNextTransIn = true;
 				FlxTransitionableState.skipNextTransOut = true;
 				if(!back) {
-					ClientPrefs.flashing = false;
+					ClientPrefs.flashing = true;
 					ClientPrefs.saveSettings();
 					FlxG.sound.play(Paths.sound('confirmMenu'));
 					FlxFlicker.flicker(warnText, 1, 0.1, false, true, function(flk:FlxFlicker) {

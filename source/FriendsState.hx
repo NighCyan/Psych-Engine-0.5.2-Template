@@ -24,12 +24,11 @@ class FlashingState extends MusicBeatState
 		add(bg);
 
 		warnText = new FlxText(0, 0, FlxG.width,
-			"嘿！看这里！\n
-			这个模组由GOP团队制作！\n
-			Hey!Watch out!\n
-			This mod is made by GOP Team!\n
-			按下A继续\n
-			Press A to continue",
+			"这里要特别感谢一个人\n
+			TG铁锅炖大鹅，他真的帮了我们很多！\n
+			emmm，我没有学过Haxe，\n所以的话质量不是那么好\n所以的话质量不是那么好\n
+			不过我们会继续进步的！祝您游戏愉快！\n
+			按A继续",
 			32);
 		warnText.setFormat(Paths.font("中文.ttf"), 32, FlxColor.WHITE, CENTER);
 		warnText.screenCenter(Y);
@@ -48,19 +47,17 @@ class FlashingState extends MusicBeatState
 				FlxTransitionableState.skipNextTransIn = true;
 				FlxTransitionableState.skipNextTransOut = true;
 				if(!back) {
-					ClientPrefs.flashing = true;
-					ClientPrefs.saveSettings();
 					FlxG.sound.play(Paths.sound('confirmMenu'));
 					FlxFlicker.flicker(warnText, 1, 0.1, false, true, function(flk:FlxFlicker) {
 						new FlxTimer().start(0.5, function (tmr:FlxTimer) {
-							MusicBeatState.switchState(new FriendsState());
+							MusicBeatState.switchState(new TitleState());
 						});
 					});
 				} else {
 					FlxG.sound.play(Paths.sound('cancelMenu'));
 					FlxTween.tween(warnText, {alpha: 0}, 1, {
 						onComplete: function (twn:FlxTween) {
-							MusicBeatState.switchState(new FriendsState());
+							MusicBeatState.switchState(new TitleState());
 						}
 					});
 				}

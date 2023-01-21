@@ -579,16 +579,14 @@ class TitleState extends MusicBeatState
 			{
 				case 1:
 					#if PSYCH_WATERMARKS
-					createCoolText(['Psych Engine by'], 15);
+					createCoolText(['This Mod by'], 15);
 					#else
 					createCoolText(['ninjamuffin99', 'phantomArcade', 'kawaisprite', 'evilsk8er']);
 					#end
 				// credTextShit.visible = true;
 				case 3:
 					#if PSYCH_WATERMARKS
-					addMoreText('ShadowMario', 15);
-					addMoreText('RiverOaken', 15);
-					addMoreText('shubs', 15);
+					addMoreText('GOP Team!', 15);
 					#else
 					addMoreText('present');
 					#end
@@ -601,12 +599,12 @@ class TitleState extends MusicBeatState
 				// credTextShit.screenCenter();
 				case 5:
 					#if PSYCH_WATERMARKS
-					createCoolText(['Not associated', 'with'], -40);
+					createCoolText(['HE!!!', 'WOW!!!'], -40);
 					#else
 					createCoolText(['In association', 'with'], -40);
 					#end
 				case 7:
-					addMoreText('newgrounds', -40);
+					addMoreText('SKL GOUGOU!', -40);
 					ngSpr.visible = true;
 				// credTextShit.text += '\nNewgrounds';
 				case 8:
@@ -634,7 +632,7 @@ class TitleState extends MusicBeatState
 					addMoreText('Vs');
 				// credTextShit.text += '\nVs';
 				case 15:
-					addMoreText('Imposter'); // credTextShit.text += '\nImposter';
+					addMoreText('Imposter!'); // credTextShit.text += '\nImposter!';
 
 				case 16:
 					skipIntro();

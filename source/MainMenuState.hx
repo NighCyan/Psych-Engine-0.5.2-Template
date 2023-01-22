@@ -132,7 +132,6 @@ class MainMenuState extends MusicBeatState
 		//var gougou = new FlxSprite('Mask Purple', 10, 150, 0.25, 0.25, ['Mask Purple idle']);
 				//add(gougou);
 				var logoJSON:LogoData;
-	logoJSON = Json.parse(Paths.getTextFromFile('images/mainGOPLogo.json'));
 	var logoMain:FlxSprite;
 	logoMain = new FlxSprite(logoJSON.logox, logoJSON.logoy);
 		logoMain.frames = Paths.getSparrowAtlas('logoBumpin-GOP');

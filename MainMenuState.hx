@@ -22,7 +22,13 @@ import editors.MasterEditorMenu;
 import flixel.input.keyboard.FlxKey;
 
 using StringTools;
-
+typedef LogoData =
+{
+	
+	logox:Float,
+	logoy:Float
+}
+//从TitleState.hx复制来的，我可真聪明！[狰狞]
 class MainMenuState extends MusicBeatState
 {
 	public static var psychEngineVersion:String = '0.5.2h'; //This is also used for Discord RPC
@@ -123,8 +129,21 @@ class MainMenuState extends MusicBeatState
 		}
 
 		FlxG.camera.follow(camFollowPos, null, 1);
-		var gougou = new FlxSprite('Mask Purple', 10, 150, 0.25, 0.25, ['Mask Purple idle']);
-				add(gougou);
+		//var gougou = new FlxSprite('Mask Purple', 10, 150, 0.25, 0.25, ['Mask Purple idle']);
+				//add(gougou);
+				
+	logoJSON = Json.parse(Paths.getTextFromFile('images/mainGOPLogo.json'));
+	var logoJSON:LogoData;
+	var logoMain:FlxSprite;
+	logoMain = new FlxSprite(logoJSON.logox, logoJSON.logoy);
+		logoMain.frames = Paths.getSparrowAtlas('logoBumpin-GOP');
+		
+		logoMain.antialiasing = ClientPrefs.globalAntialiasing;
+		logoMain.animation.addByPrefix('bump', 'logo bumpin', 24, false);
+		logoMain.animation.play('bump');
+		logoMain.updateHitbox();
+		add(logoMain);
+		//把json调试logo的xy的功能直接搬到这里来，免得我还要打包来打包去，我可真是太太太聪明了！！！一次打包就要35分钟，电脑有Vscode以及Haxe框架，三十秒就打包好了，哼！哼哼哼！啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊气死我了啊啊啊啊！
 		var versionShit:FlxText = new FlxText(12, FlxG.height - 44, 0, "GOP Vs Imposter v1" , 12);
 		versionShit.scrollFactor.set();
 		versionShit.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
@@ -289,3 +308,5 @@ class MainMenuState extends MusicBeatState
 		});
 	}
 }
+
+//操你妈逼

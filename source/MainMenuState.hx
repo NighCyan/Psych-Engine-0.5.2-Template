@@ -327,4 +327,3 @@ class MainMenuState extends MusicBeatState
 			spr.updateHitbox();
 		});
 	}
-	//I used V4 code...Sorry...

@@ -190,11 +190,15 @@ class MainMenuState extends MusicBeatState
 
 	override function update(elapsed:Float)
 	{
-		if (FlxG.sound.music.volume < 0.8)
+	if (FlxG.sound.music.volume < 0.8)
 		{
 			FlxG.sound.music.volume += 0.5 * FlxG.elapsed;
 		}
-menuItems.forEach(function(spr:FlxSprite)
+
+		timerThing += elapsed;
+		glowyThing.alpha = Math.sin(timerThing) + 0.4;
+
+		menuItems.forEach(function(spr:FlxSprite)
 		{
 			if (usingMouse)
 			{
@@ -210,37 +214,34 @@ menuItems.forEach(function(spr:FlxSprite)
 					usingMouse = true;
 					spr.animation.play('hover');
 				}
+
 				if (FlxG.mouse.pressed && canClick)
 				{
 					switch (optionShit[curSelected])
 					{
-					   default:
-							selectafter();
+						default:
+							selectSomething();
 					}
 				}
-				
 			}
-		var lerpVal:Float = CoolUtil.boundTo(elapsed * 7.5, 0, 1);
-		camFollowPos.setPosition(FlxMath.lerp(camFollowPos.x, camFollow.x, lerpVal), FlxMath.lerp(camFollowPos.y, camFollow.y, lerpVal));
+
+			spr.updateHitbox();
+		});
 
 		if (!selectedSomethin)
 		{
-			if (FlxG.android.justReleased.BACK)
+			if (controls.BACK)
 			{
-				selectedSomethin = true;
-				FlxG.sound.play(Paths.sound('cancelMenu'));
-				MusicBeatState.switchState(new TitleState());
+				FlxG.switchState(new TitleState());
 			}
 		}
 
 		super.update(elapsed);
 
-			menuItems.forEach(function(spr:FlxSprite)
+		/*menuItems.forEach(function(spr:FlxSprite)
 			{
 				spr.screenCenter(X);
-		});
-		
-	}
+		});*/
 	}
 	function changeItem(huh:Int = 0)
 	{

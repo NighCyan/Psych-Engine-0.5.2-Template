@@ -235,10 +235,10 @@ menuItems.forEach(function(spr:FlxSprite)
 
 		super.update(elapsed);
 
-		menuItems.forEach(function(spr:FlxSprite)
+		menuItems.forEach(function(spr:FlxSprite));
 		{
 			spr.screenCenter(X);
-		};
+		}
 		
 	}
 	}

@@ -306,7 +306,7 @@ function selectafter()
 	{
 		var yourchoice:String = optionShit[curSelected];
 
-		switch (yourchoice>)
+		switch (yourchoice)
 		{
 			case 'Story Mode':
 				MusicBeatState.switchState(new StoryMenuState());

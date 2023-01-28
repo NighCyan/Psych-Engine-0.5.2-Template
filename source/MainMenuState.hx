@@ -136,13 +136,13 @@ class MainMenuState extends MusicBeatState
 				//add(gougou);
 				
 	var logoJSON:LogoData = Json.parse(Paths.getTextFromFile('images/mainGOPLogo.json'));
-    var GOP的logo图标:FlxSprite = new FlxSprite(logoJSON.logox, logoJSON.logoy);
-		GOP的logo图标.frames = Paths.getSparrowAtlas('logoBumpin-GOP');
-		GOP的logo图标.animation.addByPrefix('bump', 'logo bumpin', 24, false);
-		GOP的logo图标.antialiasing = !ClientPrefs.lowQuality;
-		GOP的logo图标.scale.set(logoJSON.scaleX, logoJSON.scaleY);
-		GOP的logo图标.updateHitbox();
-		add(GOP的logo图标);
+    var logo:FlxSprite = new FlxSprite(logoJSON.logox, logoJSON.logoy);
+		logo.frames = Paths.getSparrowAtlas('logoBumpin-GOP');
+		logo.animation.addByPrefix('bump', 'logo bumpin', 24, false);
+		logo.antialiasing = !ClientPrefs.lowQuality;
+		logo.scale.set(logoJSON.scaleX, logoJSON.scaleY);
+		logo.updateHitbox();
+		add(logo);
 		//把json调试logo的xy的功能直接搬到这里来，免得我还要打包来打包去，我可真是太太太聪明了！！！我还顺便加了一个json调整大小，我真是太聪明了。手机一次打包就要35分钟，电脑有Vscode以及Haxe框架，三十秒就打包好了，哼！哼哼哼！啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊气死我了啊啊啊啊！
 		var versionShit:FlxText = new FlxText(12, FlxG.height - 44, 0, "GOP Vs Imposter v1" , 12);
 		versionShit.scrollFactor.set();
@@ -215,7 +215,7 @@ menuItems.forEach(function(spr:FlxSprite)
 					switch (optionShit[curSelected])
 					{
 					   default:
-							选择后();
+							selectafter();
 					}
 				}
 				
@@ -281,7 +281,7 @@ menuItems.forEach(function(spr:FlxSprite)
 		});
 	}
 }
-function 选择后()
+function selectafter()
 	{
 		selectedSomethin = true;
 		FlxG.sound.play(Paths.sound('confirmMenu'));
@@ -294,7 +294,7 @@ function 选择后()
 		{
 			if (curSelected != spr.ID)
 			{
-				FlxTween.tween(GOP的logo图标, {y: GOP的logo图标.y + 500}, 0.7, {ease: FlxEase.quadInOut});
+				FlxTween.tween(logo, {y: logo.y + 500}, 0.7, {ease: FlxEase.quadInOut});
 				FlxTween.tween(spr, {alpha: 0}, 1.3, {
 					ease: FlxEase.quadOut,
 					onComplete: function(twn:FlxTween)
@@ -305,19 +305,19 @@ function 选择后()
 			}
 			else
 			{
-				FlxTween.tween(GOP的logo图标, {y: GOP的logo图标.y + 500}, 1, {ease: FlxEase.quadInOut, startDelay: 0.2});
+				FlxTween.tween(logo, {y: logo.y + 500}, 1, {ease: FlxEase.quadInOut, startDelay: 0.2});
 				new FlxTimer().start(1, function(tmr:FlxTimer)
 				{
-					跳转咯哈哈哈哈我滴任务完成啦();
+					YoXi();
 				});
 			}
 		});
 	}
-	function 跳转咯哈哈哈哈我滴任务完成啦()
+	function YoXi()
 	{
-		var 你选择的选项:String = optionShit[curSelected];
+		var yourchoice:String = optionShit[curSelected];
 
-		switch (你选择的选项)
+		switch (yourchoice>)
 		{
 			case 'Story Mode':
 				MusicBeatState.switchState(new StoryMenuState());

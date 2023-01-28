@@ -238,7 +238,7 @@ menuItems.forEach(function(spr:FlxSprite)
 		menuItems.forEach(function(spr:FlxSprite)
 		{
 			spr.screenCenter(X);
-		});
+		};
 		
 	}
 	}

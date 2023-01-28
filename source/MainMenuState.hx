@@ -231,13 +231,6 @@ menuItems.forEach(function(spr:FlxSprite)
 				FlxG.sound.play(Paths.sound('cancelMenu'));
 				MusicBeatState.switchState(new TitleState());
 			}
-
-			
-				else if (FlxG.keys.anyJustPressed(debugKeys) #if android || _virtualpad.buttonE.justPressed #end)
-			{
-				selectedSomethin = true;
-				MusicBeatState.switchState(new MasterEditorMenu());
-			}
 		}
 
 		super.update(elapsed);
@@ -247,6 +240,7 @@ menuItems.forEach(function(spr:FlxSprite)
 			spr.screenCenter(X);
 		});
 		
+	}
 	}
 	function changeItem(huh:Int = 0)
 	{

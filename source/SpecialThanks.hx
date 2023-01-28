@@ -11,7 +11,7 @@ import flixel.addons.transition.FlxTransitionableState;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxTimer;
 
-class FlashingState extends MusicBeatState
+class SpecialThanks extends MusicBeatState
 {
 	public static var leftState:Bool = false;
 
@@ -24,11 +24,11 @@ class FlashingState extends MusicBeatState
 		add(bg);
 
 		warnText = new FlxText(0, 0, FlxG.width,
-			"这个模组由GOP团队制作！\n
-			这个模组有闪光灯警告\n
-			(Flashing light warning)\n
-			不适者请立刻退出\n
-			按A进入游戏",
+			"在代码方面上，我们要特别感谢铁锅炖大鹅\n
+			他帮了我们很多\n
+			在美工方面上\n
+			我们要特别感谢Stratus\n
+			按A继续",
 			32);
 		warnText.setFormat(Paths.font("中文.ttf"), 32, FlxColor.WHITE, CENTER);
 		warnText.screenCenter(Y);
@@ -47,19 +47,19 @@ class FlashingState extends MusicBeatState
 				FlxTransitionableState.skipNextTransIn = true;
 				FlxTransitionableState.skipNextTransOut = true;
 				if(!back) {
-					ClientPrefs.flashing = false;
+					ClientPrefs.flashing = true;
 					ClientPrefs.saveSettings();
 					FlxG.sound.play(Paths.sound('confirmMenu'));
 					FlxFlicker.flicker(warnText, 1, 0.1, false, true, function(flk:FlxFlicker) {
 						new FlxTimer().start(0.5, function (tmr:FlxTimer) {
-							MusicBeatState.switchState(new SpecialThanks());
+							MusicBeatState.switchState(new TitleState());
 						});
 					});
 				} else {
 					FlxG.sound.play(Paths.sound('cancelMenu'));
 					FlxTween.tween(warnText, {alpha: 0}, 1, {
 						onComplete: function (twn:FlxTween) {
-							MusicBeatState.switchState(new SpecialThanks());
+							MusicBeatState.switchState(new TitleState());
 						}
 					});
 				}

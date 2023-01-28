@@ -27,7 +27,9 @@ typedef LogoData =
 {
 	
 	logox:Float,
-	logoy:Float
+	logoy:Float,
+	scaleX:Float,
+	scaleY:Float
 }
 //从TitleState.hx复制来的，我可真聪明！[狰狞]
 class MainMenuState extends MusicBeatState
@@ -134,16 +136,14 @@ class MainMenuState extends MusicBeatState
 				//add(gougou);
 				
 	var logoJSON:LogoData = Json.parse(Paths.getTextFromFile('images/mainGOPLogo.json'));
-	var logoMain:FlxSprite;
-	logoMain = new FlxSprite(logoJSON.logox, logoJSON.logoy);
-		logoMain.frames = Paths.getSparrowAtlas('logoBumpin-GOP');
-		
-		logoMain.antialiasing = ClientPrefs.globalAntialiasing;
-		logoMain.animation.addByPrefix('bump', 'logo bumpin', 24, false);
-		logoMain.animation.play('bump');
-		logoMain.updateHitbox();
-		add(logoMain);
-		//把json调试logo的xy的功能直接搬到这里来，免得我还要打包来打包去，我可真是太太太聪明了！！！一次打包就要35分钟，电脑有Vscode以及Haxe框架，三十秒就打包好了，哼！哼哼哼！啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊气死我了啊啊啊啊！
+    var GOP的logo图标:FlxSprite = new FlxSprite(logoJSON.logox, logoJSON.logoy);
+		GOP的logo图标.frames = Paths.getSparrowAtlas('logoBumpin-GOP');
+		GOP的logo图标.animation.addByPrefix('bump', 'logo bumpin', 24, false);
+		GOP的logo图标.antialiasing = !ClientPrefs.lowQuality;
+		GOP的logo图标.scale.set(logoJSON.scaleX, logoJSON.scaleY);
+		GOP的logo图标.updateHitbox();
+		add(GOP的logo图标);
+		//把json调试logo的xy的功能直接搬到这里来，免得我还要打包来打包去，我可真是太太太聪明了！！！我还顺便加了一个json调整大小，我真是太聪明了。手机一次打包就要35分钟，电脑有Vscode以及Haxe框架，三十秒就打包好了，哼！哼哼哼！啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊气死我了啊啊啊啊！
 		var versionShit:FlxText = new FlxText(12, FlxG.height - 44, 0, "GOP Vs Imposter v1" , 12);
 		versionShit.scrollFactor.set();
 		versionShit.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
@@ -171,7 +171,7 @@ class MainMenuState extends MusicBeatState
 		#end
 
                 #if android
-                addVirtualPad(UP_DOWN, A_B_E);
+                addVirtualPad();
                 #end
 
 		super.create();
@@ -194,74 +194,48 @@ class MainMenuState extends MusicBeatState
 		{
 			FlxG.sound.music.volume += 0.5 * FlxG.elapsed;
 		}
+menuItems.forEach(function(spr:FlxSprite)
+		{
+			if (usingMouse)
+			{
+				if (!FlxG.mouse.overlaps(spr))
+					spr.animation.play('idle');
+			}
 
+			if (FlxG.mouse.overlaps(spr))
+			{
+				if (canClick)
+				{
+					curSelected = spr.ID;
+					usingMouse = true;
+					spr.animation.play('hover');
+				}
+				if (FlxG.mouse.pressed && canClick)
+				{
+					switch (optionShit[curSelected])
+					{
+					   default:
+							选择后();
+					}
+				}
+				
+			}
 		var lerpVal:Float = CoolUtil.boundTo(elapsed * 7.5, 0, 1);
 		camFollowPos.setPosition(FlxMath.lerp(camFollowPos.x, camFollow.x, lerpVal), FlxMath.lerp(camFollowPos.y, camFollow.y, lerpVal));
 
 		if (!selectedSomethin)
 		{
-			if (controls.UI_UP_P)
-			{
-				FlxG.sound.play(Paths.sound('scrollMenu'));
-				changeItem(-1);
-			}
-
-			if (controls.UI_DOWN_P)
-			{
-				FlxG.sound.play(Paths.sound('scrollMenu'));
-				changeItem(1);
-			}
-
-			if (controls.BACK)
+			if (FlxG.android.justReleased.BACK)
 			{
 				selectedSomethin = true;
 				FlxG.sound.play(Paths.sound('cancelMenu'));
 				MusicBeatState.switchState(new TitleState());
 			}
 
-			if (controls.ACCEPT)
-			{
-				if (optionShit[curSelected] == 'donate')
-				{
-					CoolUtil.browserLoad('https://ninja-muffin24.itch.io/funkin');
-				}
-				else
-				{
-					selectedSomethin = true;
-					FlxG.sound.play(Paths.sound('confirmMenu'));
-
-					if(ClientPrefs.flashing) FlxFlicker.flicker(magenta, 1.1, 0.15, false);
-
-					menuItems.forEach(function(spr:FlxSprite)
-					{
-						if (curSelected != spr.ID)
-						{
-							FlxTween.tween(spr, {alpha: 0}, 0.4, {
-								ease: FlxEase.quadOut,
-								onComplete: function(twn:FlxTween)
-								{
-									spr.kill();
-								}
-							});
-						}
+			
 						else
 						{
-							FlxFlicker.flicker(spr, 1, 0.06, false, false, function(flick:FlxFlicker)
-							{
-								var daChoice:String = optionShit[curSelected];
-
-								switch (daChoice)
-								{
-									case 'story_mode':
-										MusicBeatState.switchState(new StoryMenuState());
-									case 'freeplay':
-										MusicBeatState.switchState(new FreeplayState());
-									case 'credits':
-										MusicBeatState.switchState(new CreditsState());
-									case 'options':
-										LoadingState.loadAndSwitchState(new options.OptionsState());
-								}
-							});
+							FlxFlicker.flicker(spr, 1, 0.06, false, false, function(flick:FlxFlicker));
 						}
 					});
 				}
@@ -269,7 +243,7 @@ class MainMenuState extends MusicBeatState
 			else if (FlxG.keys.anyJustPressed(debugKeys) #if android || _virtualpad.buttonE.justPressed #end)
 			{
 				selectedSomethin = true;
-				MusicBeatState.switchState(new TitleState());
+				MusicBeatState.switchState(new MasterEditorMenu());
 			}
 		}
 
@@ -280,7 +254,6 @@ class MainMenuState extends MusicBeatState
 			spr.screenCenter(X);
 		});
 	}
-
 	function changeItem(huh:Int = 0)
 	{
 		curSelected += huh;
@@ -308,5 +281,52 @@ class MainMenuState extends MusicBeatState
 		});
 	}
 }
+function 选择后()
+	{
+		selectedSomethin = true;
+		FlxG.sound.play(Paths.sound('confirmMenu'));
+		greenImpostor.animation.play('select');
+		redImpostor.animation.play('select');
 
-//操你妈逼
+		canClick = false;
+
+		menuItems.forEach(function(spr:FlxSprite)
+		{
+			if (curSelected != spr.ID)
+			{
+				FlxTween.tween(GOP的logo图标, {y: GOP的logo图标.y + 500}, 0.7, {ease: FlxEase.quadInOut});
+				FlxTween.tween(spr, {alpha: 0}, 1.3, {
+					ease: FlxEase.quadOut,
+					onComplete: function(twn:FlxTween)
+					{
+						spr.kill();
+					}
+				});
+			}
+			else
+			{
+				FlxTween.tween(GOP的logo图标, {y: GOP的logo图标.y + 500}, 1, {ease: FlxEase.quadInOut, startDelay: 0.2});
+				new FlxTimer().start(1, function(tmr:FlxTimer)
+				{
+					跳转咯哈哈哈哈我滴任务完成啦();
+				});
+			}
+		});
+	}
+	function 跳转咯哈哈哈哈我滴任务完成啦()
+	{
+		var 你选择的选项:String = optionShit[curSelected];
+
+		switch (你选择的选项)
+		{
+			case 'Story Mode':
+				MusicBeatState.switchState(new StoryMenuState());
+			case 'Freeplay':
+				MusicBeatState.switchState(new FreeplayState());
+			case 'Options':
+				LoadingState.loadAndSwitchState(new options.OptionsState());
+			case 'Credits':
+				MusicBeatState.switchState(new CreditsState());
+		}
+	}
+//It should be noted here that I borrowed the code from Vs Imposter V4. I'm sorry I didn't apply for the right of use.这里需要注意的是，我借用了VS Imposter V4的代码。对不起，我没有申请使用权。

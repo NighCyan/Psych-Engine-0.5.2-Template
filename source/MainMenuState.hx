@@ -8,6 +8,7 @@ import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.FlxCamera;
 import haxe.Json;
+import flixel.addons.display.FlxBackdrop;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.effects.FlxFlicker;
 import flixel.graphics.frames.FlxAtlasFrames;
@@ -17,10 +18,11 @@ import flixel.math.FlxMath;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
+import flixel.util.FlxTimer;
 import lime.app.Application;
 import Achievements;
 import editors.MasterEditorMenu;
-import flixel.input.keyboard.FlxKey;
+import ClientPrefs;
 
 using StringTools;
 typedef LogoData =
@@ -29,18 +31,29 @@ typedef LogoData =
 	logox:Float,
 	logoy:Float,
 	scaleX:Float,
-	scaleY:Float
+	scaleY:Float,
+	storyX:Float,
+	storyY:Float,
+	FreeX:Float,
+	FreeY:Float,
+	CreditsX:Float,
+	CreditsY:Float,
+	optionX:Float,
+	optionY:Float
 }
-//从TitleState.hx复制来的，我可真聪明！[狰狞]
 class MainMenuState extends MusicBeatState
 {
-	public static var psychEngineVersion:String = '0.5.2h'; //This is also used for Discord RPC
+	public static var psychEngineVersion:String = 'cnm'; 
 	public static var curSelected:Int = 0;
+
 
 	var menuItems:FlxTypedGroup<FlxSprite>;
 	private var camGame:FlxCamera;
 	private var camAchievement:FlxCamera;
-	
+
+	public static var firstStart:Bool = true;
+	public static var finishedFunnyMove:Bool = false;
+
 	var optionShit:Array<String> = [
 		'story_mode',
 		'freeplay',
@@ -48,69 +61,46 @@ class MainMenuState extends MusicBeatState
 		'options'
 	];
 
+
 	var magenta:FlxSprite;
 	var camFollow:FlxObject;
 	var camFollowPos:FlxObject;
-	var debugKeys:Array<FlxKey>;
-		var canClick:Bool = true;
-var selectedSomethin:Bool = false;
-	var usingMouse:Bool = false;
+	var menuFG:FlxBackdrop;
+	var bg:FlxBackdrop;
+
+	var vignette:FlxSprite;
+	var glowyThing:FlxSprite;
+
 	override function create()
 	{
-		WeekData.loadTheFirstEnabledMod();
+		super.create();
+
+		
 
 		#if desktop
 		// Updating Discord Rich Presence
 		DiscordClient.changePresence("In the Menus", null);
 		#end
-		debugKeys = ClientPrefs.copyKey(ClientPrefs.keyBinds.get('debug_1'));
 
-		camGame = new FlxCamera();
-		camAchievement = new FlxCamera();
-		camAchievement.bgColor.alpha = 0;
-
-		FlxG.cameras.reset(camGame);
-		FlxG.cameras.add(camAchievement);
-		FlxCamera.defaultCameras = [camGame];
-
-		transIn = FlxTransitionableState.defaultTransIn;
-		transOut = FlxTransitionableState.defaultTransOut;
-
-		persistentUpdate = persistentDraw = true;
-
-		var yScroll:Float = Math.max(0.25 - (0.05 * (optionShit.length - 4)), 0.1);
-		var bg:FlxSprite = new FlxSprite(-80).loadGraphic(Paths.image('menuBG'));
-		bg.scrollFactor.set(0, yScroll);
-		bg.setGraphicSize(Std.int(bg.width * 1.175));
-		bg.updateHitbox();
-		bg.screenCenter();
-		bg.antialiasing = ClientPrefs.globalAntialiasing;
-		add(bg);
-
-		camFollow = new FlxObject(0, 0, 1, 1);
-		camFollowPos = new FlxObject(0, 0, 1, 1);
-		add(camFollow);
-		add(camFollowPos);
-
-		magenta = new FlxSprite(-80).loadGraphic(Paths.image('menuDesat'));
-		magenta.scrollFactor.set(0, yScroll);
-		magenta.setGraphicSize(Std.int(magenta.width * 1.175));
-		magenta.updateHitbox();
-		magenta.screenCenter();
-		magenta.visible = false;
-		magenta.antialiasing = ClientPrefs.globalAntialiasing;
-		magenta.color = 0xFFfd719b;
-		add(magenta);
+		if (!FlxG.sound.music.playing)
+		{
+			FlxG.sound.playMusic(Paths.music('freakyMenu'));
+		}
 		
-		// magenta.scrollFactor.set();
+
+		FlxG.mouse.visible = #if mobile false #else true #end;
+
+
+
+	
+		
+
+		
 
 		menuItems = new FlxTypedGroup<FlxSprite>();
 		add(menuItems);
 
-		var scale:Float = 1;
-		/*if(optionShit.length > 6) {
-			scale = 6 / optionShit.length;
-		}*/
+		var tex = Paths.getSparrowAtlas('FNF_main_menu_assets');
 
 		for (i in 0...optionShit.length)
 		{
@@ -131,22 +121,41 @@ var selectedSomethin:Bool = false;
 			menuItem.antialiasing = ClientPrefs.globalAntialiasing;
 			//menuItem.setGraphicSize(Std.int(menuItem.width * 0.58));
 			menuItem.updateHitbox();
+			// brian was here
+
+			// hi
+			var choicesJSON:LogoData = Json.parse(Paths.getTextFromFile('images/mainEditor.json'));
+			switch (i)
+			{
+				case 0:
+					testButton.setPosition(choicesJSON.storyX, choicesJSON.storyY);
+				case 1:
+					testButton.setPosition(choicesJSON.FreeX, choicesJSON.FreeY);
+				case 2:
+					testButton.setPosition(choicesJSON.CreditsX, choicesJSON.CreditsY);
+				case 3:
+					testButton.setPosition(choicesJSON.optionX, choicesJSON.optionY);
+	//6
+			}
+			menuItems.add(testButton);
 		}
 
-		FlxG.camera.follow(camFollowPos, null, 1);
-		//var gougou = new FlxSprite('Mask Purple', 10, 150, 0.25, 0.25, ['Mask Purple idle']);
-				//add(gougou);
-				
-	var logoJSON:LogoData = Json.parse(Paths.getTextFromFile('images/mainGOPLogo.json'));
-    var logo:FlxSprite = new FlxSprite(logoJSON.logox, logoJSON.logoy);
+		add(menuItems);
+        var logoJSON:LogoData = Json.parse(Paths.getTextFromFile('images/mainEditor.json'));
+		var logo:FlxSprite = new FlxSprite(logoJSON.logox, logoJSON.logoy);
 		logo.frames = Paths.getSparrowAtlas('logoBumpin-GOP');
 		logo.animation.addByPrefix('bump', 'logo bumpin', 24, false);
+		//logo.screenCenter();
+		logo.updateHitbox();
 		logo.antialiasing = !ClientPrefs.lowQuality;
 		logo.scale.set(logoJSON.scaleX, logoJSON.scaleY);
-		logo.updateHitbox();
 		add(logo);
-		//把json调试logo的xy的功能直接搬到这里来，免得我还要打包来打包去，我可真是太太太聪明了！！！我还顺便加了一个json调整大小，我真是太聪明了。手机一次打包就要35分钟，电脑有Vscode以及Haxe框架，三十秒就打包好了，哼！哼哼哼！啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊气死我了啊啊啊啊！
-		var versionShit:FlxText = new FlxText(12, FlxG.height - 44, 0, "GOP Vs Imposter v1" , 12);
+
+	
+
+		FlxG.camera.follow(camFollowPos, null, 1);
+
+		var versionShit:FlxText = new FlxText(12, FlxG.height - 44, 0, "GOP VS Impostor V1" ,12);
 		versionShit.scrollFactor.set();
 		versionShit.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		add(versionShit);
@@ -159,36 +168,36 @@ var selectedSomethin:Bool = false;
 
 		changeItem();
 
-		#if ACHIEVEMENTS_ALLOWED
+		/*#if ACHIEVEMENTS_ALLOWED
 		Achievements.loadAchievements();
 		var leDate = Date.now();
-		if (leDate.getDay() == 5 && leDate.getHours() >= 18) {
-			var achieveID:Int = Achievements.getAchievementIndex('friday_night_play');
-			if(!Achievements.isAchievementUnlocked(Achievements.achievementsStuff[achieveID][2])) { //It's a friday night. WEEEEEEEEEEEEEEEEEE
-				Achievements.achievementsMap.set(Achievements.achievementsStuff[achieveID][2], true);
-				giveAchievement();
-				ClientPrefs.saveSettings();
-			}
+		if (!Achievements.achievementsUnlocked[achievementID][1] && leDate.getDay() == 5 && leDate.getHours() >= 18)
+		{ // It's a friday night. WEEEEEEEEEEEEEEEEEE
+			Achievements.achievementsUnlocked[achievementID][1] = true;
+			giveAchievement();
+			ClientPrefs.saveSettings();
 		}
-		#end
-
-                #if android
-                addVirtualPad();
-                #end
-
-		super.create();
+		#end*/
 	}
 
-	#if ACHIEVEMENTS_ALLOWED
+/*	#if ACHIEVEMENTS_ALLOWED
 	// Unlocks "Freaky on a Friday Night" achievement
-	function giveAchievement() {
-		add(new AchievementObject('friday_night_play', camAchievement));
-		FlxG.sound.play(Paths.sound('confirmMenu'), 0.7);
-		trace('Giving achievement "friday_night_play"');
-	}
-	#end
+	var achievementID:Int = 0;
 
-	
+	function giveAchievement()
+	{
+		add(new AchievementObject(achievementID, camAchievement));
+		FlxG.sound.play(Paths.sound('confirmMenu'), 0.7);
+		trace('Giving achievement ' + achievementID);
+	}
+	#end*/
+
+	var selectedSomethin:Bool = false;
+
+	var canClick:Bool = true;
+	var usingMouse:Bool = false;
+
+	var timerThing:Float = 0;
 
 	override function update(elapsed:Float)
 	{
@@ -196,11 +205,15 @@ var selectedSomethin:Bool = false;
 		{
 			FlxG.sound.music.volume += 0.5 * FlxG.elapsed;
 		}
+
+		timerThing += elapsed;
+		glowyThing.alpha = Math.sin(timerThing) + 0.4;
+
 		menuItems.forEach(function(spr:FlxSprite)
 		{
 			if (usingMouse)
 			{
-				if (!FlxG.mouse.overlaps(spr))
+				if (!FlxG.mouse.overlaps(spr))//我猜测overlaps应该是鼠标停留在某个元件上。!表明否定
 					spr.animation.play('idle');
 			}
 
@@ -208,11 +221,19 @@ var selectedSomethin:Bool = false;
 			{
 				if (canClick)
 				{
-					curSelected = spr.ID;
-					usingMouse = true;
+					//do nothing
 				}
-
-				if (FlxG.mouse.pressed && canClick)
+			}
+	/*#if mobile
+		for (touch in FlxG.touches.list)
+		{
+			if (touch.justPressed)
+			{
+				pressedEnter = true;
+			}*/
+	for (touch in FlxG.touches.list)
+	{
+	if (touch.justPressed && canClick)
 				{
 					switch (optionShit[curSelected])
 					{
@@ -220,59 +241,25 @@ var selectedSomethin:Bool = false;
 							selectSomething();
 					}
 				}
-			}
-
+}
 			spr.updateHitbox();
 		});
 
 		if (!selectedSomethin)
 		{
-			if (controls.BACK)
+			if (FlxG.android.justReleased.BACK)
 			{
 				FlxG.switchState(new TitleState());
 			}
 		}
 
 		super.update(elapsed);
-
-		/*menuItems.forEach(function(spr:FlxSprite)
-			{
-				spr.screenCenter(X);
-		});*/
 	}
-	function changeItem(huh:Int = 0)
-	{
-		curSelected += huh;
 
-		if (curSelected >= menuItems.length)
-			curSelected = 0;
-		if (curSelected < 0)
-			curSelected = menuItems.length - 1;
-
-		menuItems.forEach(function(spr:FlxSprite)
-		{
-			spr.animation.play('idle');
-			spr.updateHitbox();
-
-			if (spr.ID == curSelected)
-			{
-				spr.animation.play('selected');
-				var add:Float = 0;
-				if(menuItems.length > 4) {
-					add = menuItems.length * 8;
-				}
-				camFollow.setPosition(spr.getGraphicMidpoint().x, spr.getGraphicMidpoint().y - add);
-				spr.centerOffsets();
-			}
-		});
-	}
-}
-function selectafter()
+	function selectSomething()
 	{
 		selectedSomethin = true;
 		FlxG.sound.play(Paths.sound('confirmMenu'));
-		greenImpostor.animation.play('select');
-		redImpostor.animation.play('select');
 
 		canClick = false;
 
@@ -280,7 +267,7 @@ function selectafter()
 		{
 			if (curSelected != spr.ID)
 			{
-				FlxTween.tween(logo, {y: logo.y + 500}, 0.7, {ease: FlxEase.quadInOut});
+				FlxTween.tween(logo, {y: logo.y + 800}, 0.7, {ease: FlxEase.quadInOut, startDelay: 0.24});
 				FlxTween.tween(spr, {alpha: 0}, 1.3, {
 					ease: FlxEase.quadOut,
 					onComplete: function(twn:FlxTween)
@@ -291,19 +278,20 @@ function selectafter()
 			}
 			else
 			{
-				FlxTween.tween(logo, {y: logo.y + 500}, 1, {ease: FlxEase.quadInOut, startDelay: 0.2});
+				FlxTween.tween(logo, {y: logo.y + 800}, 0.7, {ease: FlxEase.quadInOut, startDelay: 0.24});
 				new FlxTimer().start(1, function(tmr:FlxTimer)
 				{
-					YoXi();
+					goToState();
 				});
 			}
 		});
 	}
-	function YoXi()
-	{
-		var yourchoice:String = optionShit[curSelected];
 
-		switch (yourchoice)
+	function goToState()
+	{
+		var daChoice:String = optionShit[curSelected];
+
+		switch (daChoice)
 		{
 			case 'Story Mode':
 				MusicBeatState.switchState(new StoryMenuState());
@@ -315,4 +303,28 @@ function selectafter()
 				MusicBeatState.switchState(new CreditsState());
 		}
 	}
-//It should be noted here that I borrowed the code from Vs Imposter V4. I'm sorry I didn't apply for the right of use.这里需要注意的是，我借用了VS Imposter V4的代码。对不起，我没有申请使用权。
+
+	function changeItem(huh:Int = 0)
+	{
+		if (finishedFunnyMove)
+		{
+			curSelected += huh;
+
+			if (curSelected >= menuItems.length)
+				curSelected = 0;
+			if (curSelected < 0)
+				curSelected = menuItems.length - 1;
+		}
+		menuItems.forEach(function(spr:FlxSprite)
+		{
+			spr.animation.play('idle');
+
+			if (spr.ID == curSelected && finishedFunnyMove)
+			{
+				spr.animation.play('white');
+			}
+
+			spr.updateHitbox();
+		});
+	}
+	//I used V4 code...Sorry...

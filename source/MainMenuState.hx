@@ -52,7 +52,9 @@ class MainMenuState extends MusicBeatState
 	var camFollow:FlxObject;
 	var camFollowPos:FlxObject;
 	var debugKeys:Array<FlxKey>;
-
+		var canClick:Bool = true;
+var selectedSomethin:Bool = false;
+	var usingMouse:Bool = false;
 	override function create()
 	{
 		WeekData.loadTheFirstEnabledMod();
@@ -186,7 +188,7 @@ class MainMenuState extends MusicBeatState
 	}
 	#end
 
-	var selectedSomethin:Bool = false;
+	
 
 	override function update(elapsed:Float)
 	{
@@ -194,10 +196,6 @@ class MainMenuState extends MusicBeatState
 		{
 			FlxG.sound.music.volume += 0.5 * FlxG.elapsed;
 		}
-
-		timerThing += elapsed;
-		glowyThing.alpha = Math.sin(timerThing) + 0.4;
-
 		menuItems.forEach(function(spr:FlxSprite)
 		{
 			if (usingMouse)
@@ -212,7 +210,6 @@ class MainMenuState extends MusicBeatState
 				{
 					curSelected = spr.ID;
 					usingMouse = true;
-					spr.animation.play('hover');
 				}
 
 				if (FlxG.mouse.pressed && canClick)

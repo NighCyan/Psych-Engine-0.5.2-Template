@@ -20,6 +20,7 @@ import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 import lime.app.Application;
+import android.AndroidControls.Config;
 import Achievements;
 import editors.MasterEditorMenu;
 import ClientPrefs;
@@ -43,39 +44,42 @@ typedef LogoData =
 }
 class MainMenuState extends MusicBeatState
 {
-	public static var psychEngineVersion:String = 'cnm'; 
+	public static var psychEngineVersion:String = '艹nina'; // This is also used for Discord RPC
 	public static var curSelected:Int = 0;
 
+	var localFinaleState:FinaleState;
 
 	var menuItems:FlxTypedGroup<FlxSprite>;
 	private var camGame:FlxCamera;
 	private var camAchievement:FlxCamera;
 
-	public static var firstStart:Bool = true;
+//	public static var firstStart:Bool = true;
 	public static var finishedFunnyMove:Bool = false;
 
 	var optionShit:Array<String> = [
-		'story_mode',
+	    'story_mode',
 		'freeplay',
 		'credits',
-		'options'
-	];
-
+		'options'];
 
 	var magenta:FlxSprite;
 	var camFollow:FlxObject;
 	var camFollowPos:FlxObject;
-	var bg:FlxBackdrop;
-var logoJSON:LogoData = Json.parse(Paths.getTextFromFile('images/mainEditor.json'));
-		var logo:FlxSprite = new FlxSprite(logoJSON.logox, logoJSON.logoy);
+	var starFG:FlxBackdrop;
+	var starBG:FlxBackdrop;
+	var redImpostor:FlxSprite;
+	var greenImpostor:FlxSprite;
 	var vignette:FlxSprite;
 	var glowyThing:FlxSprite;
-
+var logoJSON:LogoData = Json.parse(Paths.getTextFromFile('images/mainEditor.json'));
+		var logo:FlxSprite = new FlxSprite(logoJSON.logox, logoJSON.logoy);
 	override function create()
 	{
 		super.create();
 
-		
+		// localFinaleState = ClientPrefs.finaleState;
+
+		localFinaleState = ClientPrefs.finaleState;
 
 		#if desktop
 		// Updating Discord Rich Presence
@@ -86,16 +90,37 @@ var logoJSON:LogoData = Json.parse(Paths.getTextFromFile('images/mainEditor.json
 		{
 			FlxG.sound.playMusic(Paths.music('freakyMenu'));
 		}
-		
+		if (localFinaleState == NOT_PLAYED)
+			FlxG.sound.playMusic(Paths.music('finaleMenu'));
+
+		persistentUpdate = persistentDraw = true;
 
 		FlxG.mouse.visible = #if mobile false #else true #end;
 
+				var yScroll:Float = Math.max(0.25 - (0.05 * (optionShit.length - 4)), 0.1);
+		var bg:FlxSprite = new FlxSprite(-80).loadGraphic(Paths.image('menuBG'));
+		bg.scrollFactor.set(0, yScroll);
+		bg.setGraphicSize(Std.int(bg.width * 1.175));
+		bg.updateHitbox();
+		bg.screenCenter();
+		bg.antialiasing = ClientPrefs.globalAntialiasing;
+		add(bg);
 
+		camFollow = new FlxObject(0, 0, 1, 1);
+		camFollowPos = new FlxObject(0, 0, 1, 1);
+		add(camFollow);
+		add(camFollowPos);
 
-	
-		
+		magenta = new FlxSprite(-80).loadGraphic(Paths.image('menuDesat'));
+		magenta.scrollFactor.set(0, yScroll);
+		magenta.setGraphicSize(Std.int(magenta.width * 1.175));
+		magenta.updateHitbox();
+		magenta.screenCenter();
+		magenta.visible = false;
+		magenta.antialiasing = ClientPrefs.globalAntialiasing;
+		magenta.color = 0xFFfd719b;
+		add(magenta);
 
-		
 
 		menuItems = new FlxTypedGroup<FlxSprite>();
 		add(menuItems);
@@ -105,22 +130,21 @@ var logoJSON:LogoData = Json.parse(Paths.getTextFromFile('images/mainEditor.json
 		for (i in 0...optionShit.length)
 		{
 			var offset:Float = 108 - (Math.max(optionShit.length, 4) - 4) * 80;
-			var menuItem:FlxSprite = new FlxSprite(0, (i * 140)  + offset);
-			menuItem.scale.x = scale;
-			menuItem.scale.y = scale;
-			menuItem.frames = Paths.getSparrowAtlas('mainmenu/menu_' + optionShit[i]);
-			menuItem.animation.addByPrefix('idle', optionShit[i] + " basic", 24);
-			menuItem.animation.addByPrefix('selected', optionShit[i] + " white", 24);
-			menuItem.animation.play('idle');
-			menuItem.ID = i;
-			menuItem.screenCenter(X);
-			menuItems.add(menuItem);
+			var testButton:FlxSprite = new FlxSprite(0, (i * 140)  + offset);
+			testButton.scale.x = scale;
+			testButton.scale.y = scale;
+			testButton.frames = Paths.getSparrowAtlas('mainmenu/menu_' + optionShit[i]);
+			testButton.animation.addByPrefix('idle', optionShit[i] + " basic", 24);
+			testButton.animation.addByPrefix('selected', optionShit[i] + " white", 24);
+			testButton.animation.play('idle');
+			//menuItem.screenCenter(X);
+		//	menuItems.add(menuItem);
 			var scr:Float = (optionShit.length - 4) * 0.135;
 			if(optionShit.length < 6) scr = 0;
 			menuItem.scrollFactor.set(0, scr);
-			menuItem.antialiasing = ClientPrefs.globalAntialiasing;
+			testButton.antialiasing = ClientPrefs.globalAntialiasing;
 			//menuItem.setGraphicSize(Std.int(menuItem.width * 0.58));
-			menuItem.updateHitbox();
+			testButton.updateHitbox();
 			// brian was here
 
 			// hi
@@ -128,32 +152,33 @@ var logoJSON:LogoData = Json.parse(Paths.getTextFromFile('images/mainEditor.json
 			switch (i)
 			{
 				case 0:
-					menuItem.setPosition(choicesJSON.storyX, choicesJSON.storyY);
+					testButton.setPosition(choicesJSON.storyX, choicesJSON.storyY);
 				case 1:
-					te.setPosition(choicesJSON.FreeX, choicesJSON.FreeY);
+					testButton.setPosition(choicesJSON.FreeX, choicesJSON.FreeY);
 				case 2:
-					menuItem.setPosition(choicesJSON.CreditsX, choicesJSON.CreditsY);
+					testButton.setPosition(choicesJSON.CreditsX, choicesJSON.CreditsY);
 				case 3:
-					menuItem.setPosition(choicesJSON.optionX, choicesJSON.optionY);
-	//6
+					testButton.setPosition(choicesJSON.optionX, choicesJSON.optionY);
 			}
-		add(menuItem);
+			menuItems.add(testButton);
 		}
 
 		add(menuItems);
-        logo.frames = Paths.getSparrowAtlas('logoBumpin-GOP');
+
+		logo.frames = Paths.getSparrowAtlas('logoBumpin-GOP');
 		logo.animation.addByPrefix('bump', 'logo bumpin', 24, false);
 		//logo.screenCenter();
 		logo.updateHitbox();
 		logo.antialiasing = !ClientPrefs.lowQuality;
 		logo.scale.set(logoJSON.scaleX, logoJSON.scaleY);
+		//logo.y -= 160;
 		add(logo);
 
-	
+		//firstStart = false;
 
 		FlxG.camera.follow(camFollowPos, null, 1);
 
-		var versionShit:FlxText = new FlxText(12, FlxG.height - 44, 0, "GOP VS Impostor V1" ,12);
+		var versionShit:FlxText = new FlxText(12, FlxG.height - 44, 0, "GOP VS Impostor v1", 12);
 		versionShit.scrollFactor.set();
 		versionShit.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		add(versionShit);
@@ -166,7 +191,7 @@ var logoJSON:LogoData = Json.parse(Paths.getTextFromFile('images/mainEditor.json
 
 		changeItem();
 
-		/*#if ACHIEVEMENTS_ALLOWED
+	/*	#if ACHIEVEMENTS_ALLOWED
 		Achievements.loadAchievements();
 		var leDate = Date.now();
 		if (!Achievements.achievementsUnlocked[achievementID][1] && leDate.getDay() == 5 && leDate.getHours() >= 18)
@@ -175,10 +200,10 @@ var logoJSON:LogoData = Json.parse(Paths.getTextFromFile('images/mainEditor.json
 			giveAchievement();
 			ClientPrefs.saveSettings();
 		}
-		#end*/
+		#end
 	}
 
-/*	#if ACHIEVEMENTS_ALLOWED
+	#if ACHIEVEMENTS_ALLOWED
 	// Unlocks "Freaky on a Friday Night" achievement
 	var achievementID:Int = 0;
 
@@ -211,7 +236,7 @@ var logoJSON:LogoData = Json.parse(Paths.getTextFromFile('images/mainEditor.json
 		{
 			if (usingMouse)
 			{
-				if (!FlxG.mouse.overlaps(spr))//我猜测overlaps应该是鼠标停留在某个元件上。!表明否定
+				if (!FlxG.mouse.overlaps(spr))
 					spr.animation.play('idle');
 			}
 
@@ -219,44 +244,54 @@ var logoJSON:LogoData = Json.parse(Paths.getTextFromFile('images/mainEditor.json
 			{
 				if (canClick)
 				{
-					//do nothing
+					curSelected = spr.ID;
+					usingMouse = true;
+					//spr.animation.play('selected');
 				}
-			}
-	/*#if mobile
-		for (touch in FlxG.touches.list)
-		{
-			if (touch.justPressed)
-			{
-				pressedEnter = true;
-			}*/
-	for (touch in FlxG.touches.list)
+
+			for (touch in FlxG.touches.list)
 	{
 	if (touch.justPressed && canClick)
 				{
 					switch (optionShit[curSelected])
 					{
+					/*	case 'Gallery':
+							FlxG.openURL('https://vsimpostor.com/');
+						case 'Innersloth':
+							FlxG.openURL('https://www.innersloth.com/');
+							
+							From V4 …*/
 						default:
 							selectSomething();
 					}
 				}
-}
+			}
+			}
+
+			/*starFG.x -= 0.03;
+			starBG.x -= 0.01;*/
+
 			spr.updateHitbox();
 		});
 
-		if (!selectedSomethin)
+		if (!selectedSomethin && FlxG.android.justReleased.BACK)
 		{
-			if (FlxG.android.justReleased.BACK)
+			
 			{
 				FlxG.switchState(new TitleState());
 			}
 		}
 
 		super.update(elapsed);
+
+		/*menuItems.forEach(function(spr:FlxSprite)
+			{
+				spr.screenCenter(X);
+		});*/
 	}
 
 	function selectSomething()
 	{
-	
 		selectedSomethin = true;
 		FlxG.sound.play(Paths.sound('confirmMenu'));
 
@@ -266,8 +301,10 @@ var logoJSON:LogoData = Json.parse(Paths.getTextFromFile('images/mainEditor.json
 		{
 			if (curSelected != spr.ID)
 			{
-			
+			/*	FlxTween.tween(starFG, {y: starFG.y + 500}, 0.7, {ease: FlxEase.quadInOut});
+				FlxTween.tween(starBG, {y: starBG.y + 500}, 0.7, {ease: FlxEase.quadInOut, startDelay: 0.2});*/
 				FlxTween.tween(logo, {y: logo.y + 800}, 0.7, {ease: FlxEase.quadInOut, startDelay: 0.24});
+				FlxG.camera.fade(FlxColor.BLACK, 0.7, false);
 				FlxTween.tween(spr, {alpha: 0}, 1.3, {
 					ease: FlxEase.quadOut,
 					onComplete: function(twn:FlxTween)
@@ -278,7 +315,11 @@ var logoJSON:LogoData = Json.parse(Paths.getTextFromFile('images/mainEditor.json
 			}
 			else
 			{
+				/*FlxTween.tween(starFG, {y: starFG.y + 500}, 1, {ease: FlxEase.quadInOut});
+				FlxTween.tween(starBG, {y: starBG.y + 500}, 1, {ease: FlxEase.quadInOut, startDelay: 0.2});*/
 				FlxTween.tween(logo, {y: logo.y + 800}, 0.7, {ease: FlxEase.quadInOut, startDelay: 0.24});
+				//FlxTween.tween(redImpostor, {y: redImpostor.y + 800}, 0.7, {ease: FlxEase.quadInOut, startDelay: 0.3});
+				FlxG.camera.fade(FlxColor.BLACK, 0.7, false);
 				new FlxTimer().start(1, function(tmr:FlxTimer)
 				{
 					goToState();
@@ -293,13 +334,13 @@ var logoJSON:LogoData = Json.parse(Paths.getTextFromFile('images/mainEditor.json
 
 		switch (daChoice)
 		{
-			case 'Story Mode':
+			case 'story_mode':
 				MusicBeatState.switchState(new StoryMenuState());
-			case 'Freeplay':
+			case 'freeplay':
 				MusicBeatState.switchState(new FreeplayState());
-			case 'Options':
+			case 'options':
 				LoadingState.loadAndSwitchState(new options.OptionsState());
-			case 'Credits':
+			case 'credits':
 				MusicBeatState.switchState(new CreditsState());
 		}
 	}
@@ -321,10 +362,9 @@ var logoJSON:LogoData = Json.parse(Paths.getTextFromFile('images/mainEditor.json
 
 			if (spr.ID == curSelected && finishedFunnyMove)
 			{
-				spr.animation.play('white');
+				spr.animation.play('selected');
 			}
 
 			spr.updateHitbox();
 		});
 	}
-}

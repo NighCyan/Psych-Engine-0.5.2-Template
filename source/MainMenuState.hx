@@ -369,3 +369,4 @@ var logo:FlxSprite = new FlxSprite(logoJSON.logox, logoJSON.logoy);
 			spr.updateHitbox();
 		});
 	}
+	}

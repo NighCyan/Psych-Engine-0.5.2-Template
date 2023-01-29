@@ -1,4 +1,4 @@
-package;
+package android;
 
 #if desktop
 import Discord.DiscordClient;
@@ -129,8 +129,6 @@ var logoJSON:LogoData = Json.parse(Paths.getTextFromFile('images/mainEditor.json
 		{
 			var offset:Float = 108 - (Math.max(optionShit.length, 4) - 4) * 80;
 			var testButton:FlxSprite = new FlxSprite(0, (i * 140)  + offset);
-			testButton.scale.x = scale;
-			testButton.scale.y = scale;
 			testButton.frames = Paths.getSparrowAtlas('mainmenu/menu_' + optionShit[i]);
 			testButton.animation.addByPrefix('idle', optionShit[i] + " basic", 24);
 			testButton.animation.addByPrefix('selected', optionShit[i] + " white", 24);
@@ -141,9 +139,7 @@ var logoJSON:LogoData = Json.parse(Paths.getTextFromFile('images/mainEditor.json
 			if(optionShit.length < 6) scr = 0;
 			menuItem.scrollFactor.set(0, scr);
 			testButton.antialiasing = ClientPrefs.globalAntialiasing;
-			//menuItem.setGraphicSize(Std.int(menuItem.width * 0.58));
 			testButton.updateHitbox();
-			// brian was here
 
 			// hi
 			var choicesJSON:LogoData = Json.parse(Paths.getTextFromFile('images/mainEditor.json'));

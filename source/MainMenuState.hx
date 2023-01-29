@@ -44,10 +44,8 @@ typedef LogoData =
 }
 class MainMenuState extends MusicBeatState
 {
-	public static var psychEngineVersion:String = '艹nina'; // This is also used for Discord RPC
+	public static var psychEngineVersion:String = '6'; // This is also used for Discord RPC
 	public static var curSelected:Int = 0;
-
-	var localFinaleState:FinaleState;
 
 	var menuItems:FlxTypedGroup<FlxSprite>;
 	private var camGame:FlxCamera;
@@ -60,7 +58,8 @@ class MainMenuState extends MusicBeatState
 	    'story_mode',
 		'freeplay',
 		'credits',
-		'options'];
+		'options'
+		];
 
 	var magenta:FlxSprite;
 	var camFollow:FlxObject;
@@ -79,7 +78,6 @@ var logoJSON:LogoData = Json.parse(Paths.getTextFromFile('images/mainEditor.json
 
 		// localFinaleState = ClientPrefs.finaleState;
 
-		localFinaleState = ClientPrefs.finaleState;
 
 		#if desktop
 		// Updating Discord Rich Presence

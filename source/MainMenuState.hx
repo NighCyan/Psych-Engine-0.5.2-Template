@@ -164,7 +164,7 @@ var logoJSON:LogoData = Json.parse(Paths.getTextFromFile('images/mainEditor.json
 		}
 
 		add(menuItems);
-
+}
 		logo.frames = Paths.getSparrowAtlas('logoBumpin-GOP');
 		logo.animation.addByPrefix('bump', 'logo bumpin', 24, false);
 		//logo.screenCenter();

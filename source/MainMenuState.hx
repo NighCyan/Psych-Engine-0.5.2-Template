@@ -46,9 +46,7 @@ class MainMenuState extends MusicBeatState
 	public static var psychEngineVersion:String = 'cnm'; 
 	public static var curSelected:Int = 0;
 
-var logoJSON:LogoData = Json.parse(Paths.getTextFromFile('images/mainEditor.json'));
-		var logo:FlxSprite = new FlxSprite(logoJSON.logox, logoJSON.logoy);
-		logo.frames = Paths.getSparrowAtlas('logoBumpin-GOP');
+
 	var menuItems:FlxTypedGroup<FlxSprite>;
 	private var camGame:FlxCamera;
 	private var camAchievement:FlxCamera;
@@ -68,7 +66,9 @@ var logoJSON:LogoData = Json.parse(Paths.getTextFromFile('images/mainEditor.json
 	var camFollow:FlxObject;
 	var camFollowPos:FlxObject;
 	var bg:FlxBackdrop;
-
+var logoJSON:LogoData = Json.parse(Paths.getTextFromFile('images/mainEditor.json'));
+		var logo:FlxSprite = new FlxSprite(logoJSON.logox, logoJSON.logoy);
+		logo.frames = Paths.getSparrowAtlas('logoBumpin-GOP');
 	var vignette:FlxSprite;
 	var glowyThing:FlxSprite;
 

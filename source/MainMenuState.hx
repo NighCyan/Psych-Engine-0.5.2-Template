@@ -68,7 +68,6 @@ class MainMenuState extends MusicBeatState
 	var bg:FlxBackdrop;
 var logoJSON:LogoData = Json.parse(Paths.getTextFromFile('images/mainEditor.json'));
 		var logo:FlxSprite = new FlxSprite(logoJSON.logox, logoJSON.logoy);
-		logo.frames = Paths.getSparrowAtlas('logoBumpin-GOP');
 	var vignette:FlxSprite;
 	var glowyThing:FlxSprite;
 
@@ -142,7 +141,7 @@ var logoJSON:LogoData = Json.parse(Paths.getTextFromFile('images/mainEditor.json
 		}
 
 		add(menuItems);
-        
+        logo.frames = Paths.getSparrowAtlas('logoBumpin-GOP');
 		logo.animation.addByPrefix('bump', 'logo bumpin', 24, false);
 		//logo.screenCenter();
 		logo.updateHitbox();

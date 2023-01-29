@@ -164,7 +164,8 @@ var logoJSON:LogoData = Json.parse(Paths.getTextFromFile('images/mainEditor.json
 		}
 
 		add(menuItems);
-}
+		
+var logo:FlxSprite = new FlxSprite(logoJSON.logox, logoJSON.logoy);
 		logo.frames = Paths.getSparrowAtlas('logoBumpin-GOP');
 		logo.animation.addByPrefix('bump', 'logo bumpin', 24, false);
 		//logo.screenCenter();
@@ -190,7 +191,7 @@ var logoJSON:LogoData = Json.parse(Paths.getTextFromFile('images/mainEditor.json
 		// NG.core.calls.event.logEvent('swag').send();
 
 		changeItem();
-
+}
 	/*	#if ACHIEVEMENTS_ALLOWED
 		Achievements.loadAchievements();
 		var leDate = Date.now();

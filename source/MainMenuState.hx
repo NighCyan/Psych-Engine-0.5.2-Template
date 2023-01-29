@@ -1,4 +1,4 @@
-package android;
+package;
 
 #if desktop
 import Discord.DiscordClient;
@@ -71,7 +71,7 @@ class MainMenuState extends MusicBeatState
 	var vignette:FlxSprite;
 	var glowyThing:FlxSprite;
 var logoJSON:LogoData = Json.parse(Paths.getTextFromFile('images/mainEditor.json'));
-		var logo:FlxSprite = new FlxSprite(logoJSON.logox, logoJSON.logoy);
+		
 	override function create()
 	{
 		super.create();
@@ -88,10 +88,7 @@ var logoJSON:LogoData = Json.parse(Paths.getTextFromFile('images/mainEditor.json
 		{
 			FlxG.sound.playMusic(Paths.music('freakyMenu'));
 		}
-		if (localFinaleState == NOT_PLAYED)
-			FlxG.sound.playMusic(Paths.music('finaleMenu'));
-
-		persistentUpdate = persistentDraw = true;
+		
 
 		FlxG.mouse.visible = #if mobile false #else true #end;
 
@@ -137,7 +134,7 @@ var logoJSON:LogoData = Json.parse(Paths.getTextFromFile('images/mainEditor.json
 		//	menuItems.add(menuItem);
 			var scr:Float = (optionShit.length - 4) * 0.135;
 			if(optionShit.length < 6) scr = 0;
-			menuItem.scrollFactor.set(0, scr);
+			testButton.scrollFactor.set(0, scr);
 			testButton.antialiasing = ClientPrefs.globalAntialiasing;
 			testButton.updateHitbox();
 

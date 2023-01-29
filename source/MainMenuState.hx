@@ -46,7 +46,9 @@ class MainMenuState extends MusicBeatState
 	public static var psychEngineVersion:String = 'cnm'; 
 	public static var curSelected:Int = 0;
 
-
+var logoJSON:LogoData = Json.parse(Paths.getTextFromFile('images/mainEditor.json'));
+		var logo:FlxSprite = new FlxSprite(logoJSON.logox, logoJSON.logoy);
+		logo.frames = Paths.getSparrowAtlas('logoBumpin-GOP');
 	var menuItems:FlxTypedGroup<FlxSprite>;
 	private var camGame:FlxCamera;
 	private var camAchievement:FlxCamera;
@@ -65,7 +67,6 @@ class MainMenuState extends MusicBeatState
 	var magenta:FlxSprite;
 	var camFollow:FlxObject;
 	var camFollowPos:FlxObject;
-	var menuFG:FlxBackdrop;
 	var bg:FlxBackdrop;
 
 	var vignette:FlxSprite;
@@ -128,22 +129,20 @@ class MainMenuState extends MusicBeatState
 			switch (i)
 			{
 				case 0:
-					testButton.setPosition(choicesJSON.storyX, choicesJSON.storyY);
+					menuItem.setPosition(choicesJSON.storyX, choicesJSON.storyY);
 				case 1:
-					testButton.setPosition(choicesJSON.FreeX, choicesJSON.FreeY);
+					te.setPosition(choicesJSON.FreeX, choicesJSON.FreeY);
 				case 2:
-					testButton.setPosition(choicesJSON.CreditsX, choicesJSON.CreditsY);
+					menuItem.setPosition(choicesJSON.CreditsX, choicesJSON.CreditsY);
 				case 3:
-					testButton.setPosition(choicesJSON.optionX, choicesJSON.optionY);
+					menuItem.setPosition(choicesJSON.optionX, choicesJSON.optionY);
 	//6
 			}
-			menuItems.add(testButton);
+		add(menuItem);
 		}
 
 		add(menuItems);
-        var logoJSON:LogoData = Json.parse(Paths.getTextFromFile('images/mainEditor.json'));
-		var logo:FlxSprite = new FlxSprite(logoJSON.logox, logoJSON.logoy);
-		logo.frames = Paths.getSparrowAtlas('logoBumpin-GOP');
+        
 		logo.animation.addByPrefix('bump', 'logo bumpin', 24, false);
 		//logo.screenCenter();
 		logo.updateHitbox();
@@ -258,6 +257,7 @@ class MainMenuState extends MusicBeatState
 
 	function selectSomething()
 	{
+	
 		selectedSomethin = true;
 		FlxG.sound.play(Paths.sound('confirmMenu'));
 
@@ -267,6 +267,7 @@ class MainMenuState extends MusicBeatState
 		{
 			if (curSelected != spr.ID)
 			{
+			
 				FlxTween.tween(logo, {y: logo.y + 800}, 0.7, {ease: FlxEase.quadInOut, startDelay: 0.24});
 				FlxTween.tween(spr, {alpha: 0}, 1.3, {
 					ease: FlxEase.quadOut,

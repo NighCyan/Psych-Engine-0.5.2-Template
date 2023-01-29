@@ -295,7 +295,7 @@ var logo:FlxSprite = new FlxSprite(logoJSON.logox, logoJSON.logoy);
 			{
 			/*	FlxTween.tween(starFG, {y: starFG.y + 500}, 0.7, {ease: FlxEase.quadInOut});
 				FlxTween.tween(starBG, {y: starBG.y + 500}, 0.7, {ease: FlxEase.quadInOut, startDelay: 0.2});*/
-				FlxTween.tween(logo, {y: logo.y + 800}, 0.7, {ease: FlxEase.quadInOut, startDelay: 0.24});
+				FlxTween.tween(logo, {y: getVar(logo).y + 800}, 0.7, {ease: FlxEase.quadInOut, startDelay: 0.24});
 				FlxG.camera.fade(FlxColor.BLACK, 0.7, false);
 				FlxTween.tween(spr, {alpha: 0}, 1.3, {
 					ease: FlxEase.quadOut,
@@ -309,7 +309,7 @@ var logo:FlxSprite = new FlxSprite(logoJSON.logox, logoJSON.logoy);
 			{
 				/*FlxTween.tween(starFG, {y: starFG.y + 500}, 1, {ease: FlxEase.quadInOut});
 				FlxTween.tween(starBG, {y: starBG.y + 500}, 1, {ease: FlxEase.quadInOut, startDelay: 0.2});*/
-				FlxTween.tween(logo, {y: logo.y + 800}, 0.7, {ease: FlxEase.quadInOut, startDelay: 0.24});
+				FlxTween.tween(logo, {y: getVar(logo).y + 800}, 0.7, {ease: FlxEase.quadInOut, startDelay: 0.24});
 				//FlxTween.tween(redImpostor, {y: redImpostor.y + 800}, 0.7, {ease: FlxEase.quadInOut, startDelay: 0.3});
 				FlxG.camera.fade(FlxColor.BLACK, 0.7, false);
 				new FlxTimer().start(1, function(tmr:FlxTimer)

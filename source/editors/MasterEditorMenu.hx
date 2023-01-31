@@ -61,13 +61,15 @@ class MasterEditorMenu extends MusicBeatState
 		if (controls.BACK)
 		{
 			MusicBeatState.switchState(new MainMenuState());
-		}
+		
 			FlxG.sound.music.volume = 0;
 			#if PRELOAD_ALL
 			FreeplayState.destroyFreeplayVocals();
 			#end
+			var bullShit:Int = 0;
+		super.update(elapsed);
 		}
 		
-		var bullShit:Int = 0;
-		super.update(elapsed);
+		
+	}
 	}

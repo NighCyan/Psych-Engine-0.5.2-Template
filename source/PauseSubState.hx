@@ -224,7 +224,7 @@ class PauseSubState extends MusicBeatSubstate
 			{
 
 				var infofuckyou:FlxText = new FlxText(0, 100, infoText , true, false);
-				add(infofuckyou)
+				add(infofuckyou);
 				if (accepted)
 				{
 				close()

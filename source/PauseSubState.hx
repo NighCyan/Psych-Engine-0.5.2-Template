@@ -227,7 +227,7 @@ class PauseSubState extends MusicBeatSubstate
 				add(infofuckyou);
 				if (accepted)
 				{
-				close()
+				close();
 				}
 				}
 				}

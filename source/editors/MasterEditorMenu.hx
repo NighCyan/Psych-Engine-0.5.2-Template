@@ -36,7 +36,6 @@ class MasterEditorMenu extends MusicBeatState
 		for (i in 0...options.length)
 		{
 			var leText:FlxText = new FlxText(0, (70 * i) + 30, options[i], true, false);
-			leText.isMenuItem = true;
 			leText.targetY = i;
 			leText.setFormat(Paths.font("中文.ttf"), 32);
 			add(leText);

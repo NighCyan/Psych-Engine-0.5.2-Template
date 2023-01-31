@@ -29,7 +29,8 @@ typedef LogoData =
 	logox:Float,
 	logoy:Float,
 	scaleX:Float,
-	scaleY:Float
+	scaleY:Float,
+	tip:String
 }
 class MainMenuState extends MusicBeatState
 {
@@ -98,19 +99,17 @@ class MainMenuState extends MusicBeatState
 		magenta.antialiasing = ClientPrefs.globalAntialiasing;
 		magenta.color = 0xFFfd719b;
 		add(magenta);
-		var logoJSON:LogoData = Json.parse(Paths.getTextFromFile('images/mainEditor.json'));
+		// magenta.scrollFactor.set();
+
+		menuItems = new FlxTypedGroup<FlxSprite>();
+		add(menuItems);
+var logoJSON:LogoData = Json.parse(Paths.getTextFromFile('images/mainEditor.json'));
 		var logo:FlxSprite = new FlxSprite(logoJSON.logox, logoJSON.logoy);
 		logo.frames = Paths.getSparrowAtlas('logoBumpin-GOP');
 		logo.animation.addByPrefix('bump', 'logo bumpin', 24, false);
 		//logo.screenCenter();
 		logo.updateHitbox();
-		logo.scale.set(logoJSON.scaleX, logoJSON.scaleY);
 		add(logo);
-		// magenta.scrollFactor.set();
-
-		menuItems = new FlxTypedGroup<FlxSprite>();
-		add(menuItems);
-
 		var scale:Float = 1;
 		/*if(optionShit.length > 6) {
 			scale = 6 / optionShit.length;

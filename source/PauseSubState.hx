@@ -223,7 +223,9 @@ class PauseSubState extends MusicBeatSubstate
 				if (menuItems == songinfo)
 			{
 
-				var infofuckyou:FlxText = new FlxText(0, 100, infoText , true, false);
+				var infofuckyou:FlxText = new FlxText(12, FlxG.height - 44, 0, "GOP vs Imposter V1", 12);
+		infofuckyou.scrollFactor.set();
+		infofuckyou.setFormat(Paths.font("中文.ttf"), 32, FlxColor.WHITE, CENTER);
 				add(infofuckyou);
 				if (accepted)
 				{

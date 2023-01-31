@@ -3,4 +3,5 @@
 	"logoy":-150,
 	'scaleX':1,
 	'scaleY':1
+	'tip':'这控制大小的功能废弃，This controls the size of the feature.'
 }

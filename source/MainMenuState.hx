@@ -81,7 +81,7 @@ class MainMenuState extends MusicBeatState
 		persistentUpdate = persistentDraw = true;
 
 		var yScroll:Float = Math.max(0.25 - (0.05 * (optionShit.length - 4)), 0.1);
-		logoJSON = Json.parse(Paths.getTextFromFile('images/mainEditor.json'));
+		var logoJSON:LogoData = Json.parse(Paths.getTextFromFile('images/mainEditor.json'));
 		var bg:FlxSprite = new FlxSprite(-80).loadGraphic(Paths.image('menuBG'));
 		bg.scrollFactor.set(0, yScroll);
 		bg.setGraphicSize(Std.int(bg.width * 1.175));

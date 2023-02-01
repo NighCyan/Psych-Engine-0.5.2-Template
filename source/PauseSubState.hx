@@ -138,6 +138,10 @@ class PauseSubState extends MusicBeatSubstate
                 {
                         addVirtualPad(FULL, A);
                 }
+                else if (menuItems == songinfo)
+                {
+                addVirtualPad(NONE, A);
+                }
                 else
                 {
                         addVirtualPad(UP_DOWN, A);
@@ -223,10 +227,10 @@ class PauseSubState extends MusicBeatSubstate
 				if (menuItems == songinfo)
 			{
 
-				var infofuckyou:FlxText = new FlxText(12, FlxG.height - 44, 0, "GOP vs Imposter V1", 12);
-		infofuckyou.scrollFactor.set();
+				infofuckyou = new FlxText(0, 0, FlxG.width, infoText, 32);
 		infofuckyou.setFormat(Paths.font("中文.ttf"), 32, FlxColor.WHITE, CENTER);
-				add(infofuckyou);
+		infofuckyou.screenCenter(Y);
+		add(infofuckyou);
 				if (accepted)
 				{
 				close();

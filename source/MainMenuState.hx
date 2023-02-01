@@ -52,7 +52,7 @@ class MainMenuState extends MusicBeatState
 	var camFollow:FlxObject;
 	var camFollowPos:FlxObject;
 	var debugKeys:Array<FlxKey>;
-    var logoJSON:LogoData 
+    var logoJSON:LogoData;
 	override function create()
 	{
 		WeekData.loadTheFirstEnabledMod();

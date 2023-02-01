@@ -174,7 +174,7 @@ class MainMenuState extends MusicBeatState
 
 		super.create();
 	}
-
+    var logo:FlxSprite;
 	#if ACHIEVEMENTS_ALLOWED
 	// Unlocks "Freaky on a Friday Night" achievement
 	function giveAchievement() {

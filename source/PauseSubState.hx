@@ -20,6 +20,7 @@ class PauseSubState extends MusicBeatSubstate
 	var grpMenuShit:FlxTypedGroup<Alphabet>;
 
 	var menuItems:Array<String> = [];
+	var infofuckyou:FlxText;
 	var menuItemsOG:Array<String> = ['Resume', 'Restart Song', 'Change Difficulty','Info', 'Exit to menu'];
 	var difficultyChoices = [];
 	var curSelected:Int = 0;
@@ -226,7 +227,6 @@ class PauseSubState extends MusicBeatSubstate
 			{
 				if (menuItems == songinfo)
 			{
-
 				infofuckyou = new FlxText(0, 0, FlxG.width, infoText, 32);
 		infofuckyou.setFormat(Paths.font("中文.ttf"), 32, FlxColor.WHITE, CENTER);
 		infofuckyou.screenCenter(Y);

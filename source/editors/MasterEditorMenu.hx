@@ -21,8 +21,8 @@ using StringTools;
 class MasterEditorMenu extends MusicBeatState
 {
 	var options:Array<String> = [
-		'',
-		'',
+		'GET-OUT',
+		'GUN',
 		'',
 		'',
 		'',

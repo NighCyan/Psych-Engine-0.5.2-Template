@@ -52,7 +52,7 @@ class MainMenuState extends MusicBeatState
 	var camFollow:FlxObject;
 	var camFollowPos:FlxObject;
 	var debugKeys:Array<FlxKey>;
-
+    var logoJSON:LogoData 
 	override function create()
 	{
 		WeekData.loadTheFirstEnabledMod();
@@ -77,6 +77,7 @@ class MainMenuState extends MusicBeatState
 		persistentUpdate = persistentDraw = true;
 
 		var yScroll:Float = Math.max(0.25 - (0.05 * (optionShit.length - 4)), 0.1);
+		logoJSON = Json.parse(Paths.getTextFromFile('images/mainEditor.json'));
 		var bg:FlxSprite = new FlxSprite(-80).loadGraphic(Paths.image('menuBG'));
 		bg.scrollFactor.set(0, yScroll);
 		bg.setGraphicSize(Std.int(bg.width * 1.175));
@@ -103,7 +104,6 @@ class MainMenuState extends MusicBeatState
 
 		menuItems = new FlxTypedGroup<FlxSprite>();
 		add(menuItems);
-var logoJSON:LogoData = Json.parse(Paths.getTextFromFile('images/mainEditor.json'));
 		var logo:FlxSprite = new FlxSprite(logoJSON.logox, logoJSON.logoy);
 		logo.frames = Paths.getSparrowAtlas('logoBumpin-GOP');
 		logo.animation.addByPrefix('bump', 'logo bumpin', 24, false);

@@ -21,6 +21,10 @@ import Achievements;
 import haxe.Json;
 import editors.MasterEditorMenu;
 import flixel.input.keyboard.FlxKey;
+import lime.app.Application;
+import openfl.Assets;
+import sys.FileSystem;
+import sys.io.File;
 
 using StringTools;
 typedef LogoData =

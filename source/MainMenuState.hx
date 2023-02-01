@@ -27,15 +27,6 @@ import sys.FileSystem;
 import sys.io.File;
 
 using StringTools;
-typedef LogoData =
-{
-	
-	logox:Float,
-	logoy:Float,
-	scaleX:Float,
-	scaleY:Float,
-	tip:String
-}
 class MainMenuState extends MusicBeatState
 {
 	public static var psychEngineVersion:String = '0.5.2h'; //This is also used for Discord RPC
@@ -56,7 +47,6 @@ class MainMenuState extends MusicBeatState
 	var camFollow:FlxObject;
 	var camFollowPos:FlxObject;
 	var debugKeys:Array<FlxKey>;
-    var logoJSON:LogoData;
 	override function create()
 	{
 		WeekData.loadTheFirstEnabledMod();
@@ -81,7 +71,6 @@ class MainMenuState extends MusicBeatState
 		persistentUpdate = persistentDraw = true;
 
 		var yScroll:Float = Math.max(0.25 - (0.05 * (optionShit.length - 4)), 0.1);
-		var logoJSON:LogoData = Json.parse(Paths.getTextFromFile('images/mainEditor.json'));
 		var bg:FlxSprite = new FlxSprite(-80).loadGraphic(Paths.image('menuBG'));
 		bg.scrollFactor.set(0, yScroll);
 		bg.setGraphicSize(Std.int(bg.width * 1.175));
@@ -108,9 +97,10 @@ class MainMenuState extends MusicBeatState
 
 		menuItems = new FlxTypedGroup<FlxSprite>();
 		add(menuItems);
-		var logo:FlxSprite = new FlxSprite(logoJSON.logox, logoJSON.logoy);
+		var logo:FlxSprite = new FlxSprite(-140, -150);
 		logo.frames = Paths.getSparrowAtlas('logoBumpin-GOP');
 		logo.animation.addByPrefix('bump', 'logo bumpin', 24, false);
+		logo.scale.set(0.8, 0.8);
 		//logo.screenCenter();
 		logo.updateHitbox();
 		add(logo);

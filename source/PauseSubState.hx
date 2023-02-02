@@ -32,7 +32,7 @@ class PauseSubState extends MusicBeatSubstate
 	var curTime:Float = Math.max(0, Conductor.songPosition);
 	//var botplayText:FlxText;
 	var songinfo = [];
-	var infoText:String = Paths.txt(songName + '/' + songName + 'song-info');
+	var infoText:String = getText(Paths.txt(songName + '/' + songName + 'song-info'));
 	public static var songName:String = '';
 
 	public function new(x:Float, y:Float)
@@ -202,6 +202,7 @@ class PauseSubState extends MusicBeatSubstate
 					else if(curTime < 0) curTime += FlxG.sound.music.length;
 					updateSkipTimeText();
 				}
+			
 		}
 
 		if (accepted)
@@ -227,10 +228,7 @@ class PauseSubState extends MusicBeatSubstate
 			{
 				if (menuItems == songinfo)
 			{
-				infofuckyou = new FlxText(0, 0, FlxG.width, infoText, 32);
-		infofuckyou.setFormat(Paths.font("中文.ttf"), 32, FlxColor.WHITE, CENTER);
-		infofuckyou.screenCenter(Y);
-		add(infofuckyou);
+				//傻逼
 				if (accepted)
 				{
 				close();
@@ -243,6 +241,10 @@ class PauseSubState extends MusicBeatSubstate
 					close();
 					case "Info":
 					menuItems = songinfo;
+					infofuckyou = new FlxText(0, 0, FlxG.width, infoText, 32);
+		infofuckyou.setFormat(Paths.font("中文.ttf"), 32, FlxColor.WHITE, CENTER);
+		infofuckyou.screenCenter(Y);
+		add(infofuckyou);
 					regenMenu();
 				case 'Change Difficulty':
 					menuItems = difficultyChoices;

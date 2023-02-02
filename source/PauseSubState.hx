@@ -32,7 +32,7 @@ class PauseSubState extends MusicBeatSubstate
 	var curTime:Float = Math.max(0, Conductor.songPosition);
 	//var botplayText:FlxText;
 	var songinfo = [];
-	var infoText:String = getText(Paths.txt(songName + '/' + songName + 'song-info'));
+	var infoText:String = Paths.getTextFromFile(Paths.txt(songName + '/' + songName + 'song-info'));
 	public static var songName:String = '';
 
 	public function new(x:Float, y:Float)

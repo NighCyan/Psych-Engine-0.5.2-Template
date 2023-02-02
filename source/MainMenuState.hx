@@ -19,7 +19,6 @@ import flixel.util.FlxColor;
 import lime.app.Application;
 import Achievements;
 import haxe.Json;
-import editors.MasterEditorMenu;
 import flixel.input.keyboard.FlxKey;
 import lime.app.Application;
 import openfl.Assets;
@@ -169,7 +168,7 @@ class MainMenuState extends MusicBeatState
 		#end
 
                 #if android
-                addVirtualPad(UP_DOWN, A_B_E);
+                addVirtualPad(UP_DOWN, A_B);
                 #end
 
 		super.create();
@@ -254,12 +253,6 @@ class MainMenuState extends MusicBeatState
 										MusicBeatState.switchState(new StoryMenuState());
 									case 'freeplay':
 										MusicBeatState.switchState(new FreeplayState());
-									/*#if MODS_ALLOWED
-									case 'mods':
-										MusicBeatState.switchState(new ModsMenuState());
-									#end*/
-									/*case 'awards':
-										MusicBeatState.switchState(new AchievementsMenuState());*/
 									case 'credits':
 										MusicBeatState.switchState(new CreditsState());
 									case 'options':
@@ -270,11 +263,7 @@ class MainMenuState extends MusicBeatState
 					});
 				}
 			}
-			else if (FlxG.keys.anyJustPressed(debugKeys) #if android || _virtualpad.buttonE.justPressed #end)
-			{
-				selectedSomethin = true;
-				MusicBeatState.switchState(new MasterEditorMenu());
-			}
+		
 		}
 
 		super.update(elapsed);
@@ -311,11 +300,5 @@ class MainMenuState extends MusicBeatState
 			}
 		});
 	}
-override function beatHit()
-	{
-		super.beatHit();
-        logo.animation.play('bump', true);
-
-		}
 }
 

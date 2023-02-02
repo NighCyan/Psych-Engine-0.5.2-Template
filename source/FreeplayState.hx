@@ -194,7 +194,7 @@ class FreeplayState extends MusicBeatState
 
 		#if PRELOAD_ALL
 		#if android
-		var leText:String = "Press X to listen to the Song / Press C to open the Gameplay Changers Menu / Press Y to Reset your Score and Accuracy.";
+		var leText:String = "按X可以播放歌曲，Y重置分数，C对歌曲进行设置";
 		var size:Int = 16;
 		#else
 		var leText:String = "Press SPACE to listen to the Song / Press CTRL to open the Gameplay Changers Menu / Press RESET to Reset your Score and Accuracy.";
@@ -205,12 +205,12 @@ class FreeplayState extends MusicBeatState
 		var size:Int = 18;
 		#end
 		var text:FlxText = new FlxText(textBG.x, textBG.y + 4, FlxG.width, leText, size);
-		text.setFormat(Paths.font("vcr.ttf"), size, FlxColor.WHITE, RIGHT);
+		text.setFormat(Paths.font("中文.ttf"), size, FlxColor.WHITE, RIGHT);
 		text.scrollFactor.set();
 		add(text);
 
                 #if android
-                addVirtualPad(FULL, A_B_C_X_Y_Z);
+                addVirtualPad(FULL, A_B_C_X_Y);
                 #end
 
 		super.create();

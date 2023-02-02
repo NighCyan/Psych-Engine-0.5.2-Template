@@ -20,8 +20,7 @@ class PauseSubState extends MusicBeatSubstate
 	var grpMenuShit:FlxTypedGroup<Alphabet>;
 
 	var menuItems:Array<String> = [];
-	var infofuckyou:FlxText;
-	var menuItemsOG:Array<String> = ['Resume', 'Restart Song', 'Change Difficulty','Info', 'Exit to menu'];
+	var menuItemsOG:Array<String> = ['Resume', 'Restart Song', 'Change Difficulty', 'Exit to menu'];
 	var difficultyChoices = [];
 	var curSelected:Int = 0;
 
@@ -31,8 +30,7 @@ class PauseSubState extends MusicBeatSubstate
 	var skipTimeTracker:Alphabet;
 	var curTime:Float = Math.max(0, Conductor.songPosition);
 	//var botplayText:FlxText;
-	var songinfo = [];
-	var infoText:String = Paths.getTextFromFile(Paths.txt(songName + '/' + songName + 'song-info'));
+
 	public static var songName:String = '';
 
 	public function new(x:Float, y:Float)
@@ -61,6 +59,7 @@ class PauseSubState extends MusicBeatSubstate
 			difficultyChoices.push(diff);
 		}
 		difficultyChoices.push('BACK');
+
 		pauseMusic = new FlxSound();
 		if(songName != null) {
 			pauseMusic.loadEmbedded(Paths.music(songName), true, true);
@@ -139,10 +138,6 @@ class PauseSubState extends MusicBeatSubstate
                 {
                         addVirtualPad(FULL, A);
                 }
-                else if (menuItems == songinfo)
-                {
-                addVirtualPad(NONE, A);
-                }
                 else
                 {
                         addVirtualPad(UP_DOWN, A);
@@ -202,7 +197,6 @@ class PauseSubState extends MusicBeatSubstate
 					else if(curTime < 0) curTime += FlxG.sound.music.length;
 					updateSkipTimeText();
 				}
-			
 		}
 
 		if (accepted)
@@ -224,28 +218,11 @@ class PauseSubState extends MusicBeatSubstate
 				menuItems = menuItemsOG;
 				regenMenu();
 			}
-			if (menuItems == songinfo)
-			{
-				if (menuItems == songinfo)
-			{
-				//傻逼
-				if (accepted)
-				{
-				close();
-				}
-				}
-				}
+
 			switch (daSelected)
 			{
 				case "Resume":
 					close();
-					case "Info":
-					menuItems = songinfo;
-					infofuckyou = new FlxText(0, 0, FlxG.width, infoText, 32);
-		infofuckyou.setFormat(Paths.font("中文.ttf"), 32, FlxColor.WHITE, CENTER);
-		infofuckyou.screenCenter(Y);
-		add(infofuckyou);
-					regenMenu();
 				case 'Change Difficulty':
 					menuItems = difficultyChoices;
 					regenMenu();
@@ -282,6 +259,9 @@ class PauseSubState extends MusicBeatSubstate
 					PlayState.instance.botplayTxt.visible = PlayState.instance.cpuControlled;
 					PlayState.instance.botplayTxt.alpha = 1;
 					PlayState.instance.botplaySine = 0;
+                                case 'Chart Editor':
+		                        MusicBeatState.switchState(new editors.ChartingState());
+		                        PlayState.chartingMode = true;
 				case "Exit to menu":
 					PlayState.deathCounter = 0;
 					PlayState.seenCutscene = false;
